@@ -1,0 +1,27 @@
+{
+  "name": "Catch Coffee Cat",
+  "version": "0.1.0",
+  "description": "Ends the Google Meet meeting under certain circumstances",
+  "permissions": ["storage", "tabs"],
+  "host_permissions": ["https://meet.google.com/*"],
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://meet.google.com/*"],
+      "js": ["contentScript.js"]
+    }
+  ],
+  "action": {
+    "default_icon": {
+      "16": "assets/coffee.png",
+      "24": "assets/coffee.png",
+      "32": "assets/coffee.png"
+    },
+    "default_title": "Catch Coffee Cat",
+    "default_popup": "popup.html"
+  },
+  "manifest_version": 3
+}
