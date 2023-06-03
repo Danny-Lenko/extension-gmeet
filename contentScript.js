@@ -1,8 +1,9 @@
 let party = [];
+let controller = 0;
+let isMeeting = false;
 
-let organizerController = 0;
-
-const targetNode = document.body;
+const meetingTimeout = 10000;
+const observerTargetNode = document.body;
 
 const observerConfig = {
   childList: true,
@@ -10,23 +11,35 @@ const observerConfig = {
 };
 
 const observer = new MutationObserver((mutationsList) => {
-  const comeMessage = document.querySelector('[jsname="Ota2jd"]');
   const goMessage = document.getElementsByClassName("VfPpkd-gIZMF")[0];
+  const redButton = document.querySelector('[jsname="CQylAd"]');
 
-  if (comeMessage) {
-    getParty();
-    console.log("came:", party);
-  }
+  getParty();
+  registerMeeting();
 
   if (goMessage) {
     getParty();
-    console.log("went:", party);
+    if (checkIfAlone()) {
+      setTimeout(() => {
+        if (controller < 1 && isMeeting) {
+          controller++;
+          redButton.click();
+          setTimeout(() => {
+            const terminalButton =
+              document.getElementsByClassName("VfPpkd-LgbsSe")[2];
+
+            controller = 0;
+            isMeeting = false;
+            terminalButton.click();
+          }, 1000);
+        }
+      }, 1000);
+    }
   }
 });
 
 (() => {
-  console.log("we are at work");
-  observer.observe(targetNode, observerConfig);
+  observer.observe(observerTargetNode, observerConfig);
 })();
 
 const getParty = () => {
@@ -36,6 +49,20 @@ const getParty = () => {
     party.push("organizer");
   } else {
     party.filter((player) => player !== "organizer");
+  }
+};
+
+const checkIfAlone = () => {
+  return party.length === 1;
+};
+
+const registerMeeting = () => {
+  const isEnaughParty = party.length > 1;
+  if (isEnaughParty) {
+    setTimeout(() => {
+      isMeeting = true;
+      console.log("the meeting has begun");
+    }, meetingTimeout);
   }
 };
 
